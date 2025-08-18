@@ -1,0 +1,33 @@
+# Cloudflare Worker 配置文件
+
+[build]
+command = "npm run build"
+
+[env.production]
+name = "ethers-contract-proxy"
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+name = "ethers-contract-proxy-staging"
+vars = { ENVIRONMENT = "staging" }
+
+# 开发环境配置
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+# KV 存储配置（如果需要从 KV 获取数据）
+# [[kv_namespaces]]
+# binding = "CONTRACTS"
+# id = "your-contracts-kv-namespace-id"
+
+# [[kv_namespaces]]
+# binding = "RPCS"
+# id = "your-rpcs-kv-namespace-id"
+
+# 定时任务配置（可选）
+# [triggers]
+# crons = ["0 */6 * * *"] # 每6小时更新一次数据
+
+# 限制配置
+[limits]
+cpu_ms = 30000
