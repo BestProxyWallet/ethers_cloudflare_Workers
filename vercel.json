@@ -15,25 +15,5 @@
     ],
     "env": {
         "NODE_ENV": "production"
-    },
-    "functions": {
-        "pages/api/rpc.js": {
-            "maxDuration": 30
-        },
-        "pages/api/chains.js": {
-            "maxDuration": 10
-        },
-        "pages/api/contracts.js": {
-            "maxDuration": 10
-        },
-        "pages/api/contracts/[contractName]/functions.js": {
-            "maxDuration": 10
-        },
-        "pages/api/contract/call.js": {
-            "maxDuration": 30
-        },
-        "pages/api/health.js": {
-            "maxDuration": 5
-        }
     }
 }
