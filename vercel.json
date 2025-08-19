@@ -3,22 +3,37 @@
     "name": "ethers-rpc-proxy",
     "builds": [
         {
-            "src": "index.js",
-            "use": "@vercel/node"
+            "src": "package.json",
+            "use": "@vercel/next"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "index.js"
+            "dest": "/index.html"
         }
     ],
     "env": {
         "NODE_ENV": "production"
     },
     "functions": {
-        "index.js": {
+        "pages/api/rpc.js": {
             "maxDuration": 30
+        },
+        "pages/api/chains.js": {
+            "maxDuration": 10
+        },
+        "pages/api/contracts.js": {
+            "maxDuration": 10
+        },
+        "pages/api/contracts/[contractName]/functions.js": {
+            "maxDuration": 10
+        },
+        "pages/api/contract/call.js": {
+            "maxDuration": 30
+        },
+        "pages/api/health.js": {
+            "maxDuration": 5
         }
     }
 }
