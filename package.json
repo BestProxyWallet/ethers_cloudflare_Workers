@@ -1,13 +1,13 @@
 {
     "name": "ethers-rpc-proxy",
     "version": "1.0.0",
-    "description": "支持在 Vercel 上部署的 ethers.js 调用中转 Node.js服务",
+    "description": "A Vercel-deployable ethers.js RPC proxy service that provides unified RPC interface access to multiple blockchain networks. (支持在 Vercel 上部署的 ethers.js 调用中转服务，提供统一的 RPC 接口访问多个区块链网络。)",
     "main": "index.js",
     "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
+        "dev": "Start development server with Next.js",
+        "build": "Build production version of the application",
+        "start": "Start production server",
+        "lint": "Run ESLint to check code quality"
     },
     "dependencies": {
         "express": "^4.18.2",

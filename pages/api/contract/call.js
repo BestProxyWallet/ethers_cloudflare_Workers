@@ -1,6 +1,18 @@
 import { rpcConfig, abiConfig, getSupportedContracts, handleContractCall } from '../../../lib/rpcHandler';
 
+/**
+ * API Handler for Contract Calls
+ *
+ * This endpoint handles smart contract function calls across different blockchain networks.
+ * It validates parameters, checks contract support, and forwards the call to the appropriate
+ * blockchain network based on the provided chain ID.
+ *
+ * @param {Object} req - The HTTP request object
+ * @param {Object} res - The HTTP response object
+ * @returns {Promise<void>}
+ */
 export default async function handler(req, res) {
+    // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({
             success: false,
@@ -9,6 +21,7 @@ export default async function handler(req, res) {
     }
 
     try {
+        // Extract request parameters
         const {
             chainId,
             contractAddress,
@@ -19,35 +32,39 @@ export default async function handler(req, res) {
             value = 0
         } = req.body;
 
-        // 验证必要参数
+        // Validate required parameters
         if (!chainId || !contractAddress || !contractName || !functionName) {
             return res.status(400).json({
                 success: false,
-                error: '缺少必要参数',
+                error: 'Missing required parameters',
                 required: ['chainId', 'contractAddress', 'contractName', 'functionName']
+                // 缺少必要参数
+                // 需要 chainId, contractAddress, contractName, functionName
             });
         }
 
-        // 验证链ID
+        // Validate chain ID
         const chainExists = rpcConfig.some(chain => chain.chainId === chainId || chain.networkId === chainId);
         if (!chainExists) {
             return res.status(400).json({
                 success: false,
-                error: `不支持的链ID: ${chainId}`
+                error: `Unsupported chain ID: ${chainId}`
+                // 不支持的链ID
             });
         }
 
-        // 验证合约是否存在
+        // Validate contract support
         const supportedContracts = getSupportedContracts();
         if (!supportedContracts.includes(contractName)) {
             return res.status(400).json({
                 success: false,
-                error: `不支持的合约: ${contractName}`,
+                error: `Unsupported contract: ${contractName}`,
                 supportedContracts: supportedContracts
+                // 不支持的合约
             });
         }
 
-        // 调用合约
+        // Execute contract call
         const result = await handleContractCall(
             chainId,
             contractAddress,
@@ -58,6 +75,7 @@ export default async function handler(req, res) {
             value
         );
 
+        // Return successful response with call information
         res.json({
             success: true,
             result: result,
@@ -73,7 +91,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error('合约调用错误call:', error.message);
+        console.error('Contract call error:', error.message);
         res.status(500).json({
             success: false,
             error: error.message

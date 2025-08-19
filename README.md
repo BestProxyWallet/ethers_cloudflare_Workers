@@ -1,59 +1,60 @@
 # Ethers RPC Proxy
 
-一个支持在 Vercel 上部署的 ethers.js 调用中转服务，提供统一的 RPC 接口访问多个区块链网络。
+A Vercel-deployable ethers.js RPC proxy service that provides unified RPC interface access to multiple blockchain networks.
+（支持在 Vercel 上部署的 ethers.js 调用中转服务，提供统一的 RPC 接口访问多个区块链网络。）
 
-## 🌟 特性
+## 🌟 Features
 
-- **多链支持**: 支持 100+ 区块链网络，包括以太坊、BSC、Polygon、Arbitrum、Optimism 等
-- **智能路由**: 自动检测并选择可用的 RPC 节点，提供高可用性
-- **合约调用**: 支持预定义合约的函数调用，包括读取和写入操作
-- **易于部署**: 基于 Next.js 构建，可轻松部署到 Vercel 等平台
-- **RESTful API**: 提供标准化的 REST API 接口
-- **健康检查**: 内置健康检查端点，便于监控服务状态
+- **Multi-chain Support**: Supports 100+ blockchain networks including Ethereum, BSC, Polygon, Arbitrum, Optimism, etc.
+- **Smart Routing**: Automatically detects and selects available RPC nodes for high availability
+- **Contract Calls**: Supports predefined contract function calls including read and write operations
+- **Easy Deployment**: Built on Next.js, easily deployable to Vercel and other platforms
+- **RESTful API**: Provides standardized REST API interfaces
+- **Health Check**: Built-in health check endpoint for service monitoring
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 本地开发
+### Local Development
 
-1. **克隆项目**
+1. **Clone the repository**
 ```bash
 git clone <repository-url>
 cd ethers-cloudflare-Workers
 ```
 
-2. **安装依赖**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **启动开发服务器**
+3. **Start development server**
 ```bash
 npm run dev
 ```
 
-服务将在 `http://localhost:3000` 启动。
+The service will start at `http://localhost:3000`.
 
-### 部署到 Vercel
+### Deploy to Vercel
 
-1. **安装 Vercel CLI**
+1. **Install Vercel CLI**
 ```bash
 npm i -g vercel
 ```
 
-2. **部署项目**
+2. **Deploy the project**
 ```bash
 vercel
 ```
 
-按照提示完成部署配置。
+Follow the prompts to complete the deployment configuration.
 
-## 📚 API 文档
+## 📚 API Documentation
 
-### 通用 RPC 请求
+### Generic RPC Request
 
-**端点**: `POST /api/rpc`
+**Endpoint**: `POST /api/rpc`
 
-**请求体**:
+**Request Body**:
 ```json
 {
   "chainId": 1,
@@ -66,7 +67,7 @@ vercel
 }
 ```
 
-**响应**:
+**Response**:
 ```json
 {
   "success": true,
@@ -74,11 +75,11 @@ vercel
 }
 ```
 
-### 获取支持的链列表
+### Get Supported Chains List
 
-**端点**: `GET /api/chains`
+**Endpoint**: `GET /api/chains`
 
-**响应**:
+**Response**:
 ```json
 {
   "success": true,
@@ -94,11 +95,11 @@ vercel
 }
 ```
 
-### 获取支持的合约列表
+### Get Supported Contracts List
 
-**端点**: `GET /api/contracts`
+**Endpoint**: `GET /api/contracts`
 
-**响应**:
+**Response**:
 ```json
 {
   "success": true,
@@ -106,11 +107,11 @@ vercel
 }
 ```
 
-### 获取合约函数列表
+### Get Contract Functions List
 
-**端点**: `GET /api/contracts/[contractName]/functions`
+**Endpoint**: `GET /api/contracts/[contractName]/functions`
 
-**响应**:
+**Response**:
 ```json
 {
   "success": true,
@@ -126,11 +127,11 @@ vercel
 }
 ```
 
-### 合约调用
+### Contract Call
 
-**端点**: `POST /api/contract/call`
+**Endpoint**: `POST /api/contract/call`
 
-**请求体**:
+**Request Body**:
 ```json
 {
   "chainId": 1,
@@ -143,7 +144,7 @@ vercel
 }
 ```
 
-**响应**:
+**Response**:
 ```json
 {
   "success": true,
@@ -160,11 +161,11 @@ vercel
 }
 ```
 
-### 健康检查
+### Health Check
 
-**端点**: `GET /api/health`
+**Endpoint**: `GET /api/health`
 
-**响应**:
+**Response**:
 ```json
 {
   "status": "ok",
@@ -173,42 +174,42 @@ vercel
 }
 ```
 
-## 🔧 支持的区块链网络
+## 🔧 Supported Blockchain Networks
 
-项目支持以下区块链网络（部分示例）：
+The project supports the following blockchain networks (partial examples):
 
-- **以太坊生态**: Ethereum Mainnet, Goerli, Sepolia
+- **Ethereum Ecosystem**: Ethereum Mainnet, Goerli, Sepolia
 - **Layer 2**: Arbitrum One, Optimism, Base, Polygon
-- **其他公链**: BSC, Avalanche, Fantom, Cronos, Moonbeam
-- **测试网**: 各主网的对应测试网
+- **Other L1 Chains**: BSC, Avalanche, Fantom, Cronos, Moonbeam
+- **Testnets**: Corresponding testnets for each mainnet
 
-完整的链列表可通过 `/api/chains` 端点获取。
+Complete chain list can be obtained via the `/api/chains` endpoint.
 
-## 📦 支持的合约
+## 📦 Supported Contracts
 
-目前支持以下合约：
+Currently supports the following contracts:
 
 ### 1. Imputations
-一个复杂的代理合约，支持多种操作：
-- 钱包地址管理
-- 代币余额查询
-- 批量操作
-- 权限管理
+A complex proxy contract that supports multiple operations:
+- Wallet address management
+- Token balance queries
+- Batch operations
+- Permission management
 
 ### 2. token
-标准的 ERC20 代币合约，支持：
-- 基本代币操作（transfer, approve, allowance）
-- 余额查询
-- 代币信息获取
+Standard ERC20 token contract supporting:
+- Basic token operations (transfer, approve, allowance)
+- Balance queries
+- Token information retrieval
 
-## 💡 使用示例
+## 💡 Usage Examples
 
 ### JavaScript/Node.js
 
 ```javascript
 const axios = require('axios');
 
-// 获取以太坊最新区块号
+// Get latest Ethereum block number
 async function getLatestBlock() {
   const response = await axios.post('http://localhost:3000/api/rpc', {
     chainId: 1,
@@ -220,11 +221,11 @@ async function getLatestBlock() {
   return response.data.result;
 }
 
-// 获取代币余额
+// Get token balance
 async function getTokenBalance() {
   const response = await axios.post('http://localhost:3000/api/contract/call', {
     chainId: 1,
-    contractAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI 合约
+    contractAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI contract
     contractName: 'token',
     functionName: 'balanceOf',
     params: ['0x742d35Cc6634C0532925a3b844Bc454e4438f44e']
@@ -236,7 +237,7 @@ async function getTokenBalance() {
 ### cURL
 
 ```bash
-# RPC 请求
+# RPC request
 curl -X POST http://localhost:3000/api/rpc \
   -H "Content-Type: application/json" \
   -d '{
@@ -247,7 +248,7 @@ curl -X POST http://localhost:3000/api/rpc \
     }
   }'
 
-# 合约调用
+# Contract call
 curl -X POST http://localhost:3000/api/contract/call \
   -H "Content-Type: application/json" \
   -d '{
@@ -259,71 +260,72 @@ curl -X POST http://localhost:3000/api/contract/call \
   }'
 ```
 
-## 🛠️ 开发指南
+## 🛠️ Development Guide
 
-### 项目结构
+### Project Structure
 
 ```
-├── lib/                    # 核心逻辑
-│   ├── rpcHandler.js      # RPC 处理逻辑
-│   ├── rpcs.json          # RPC 配置
-│   └── abi.json           # 合约 ABI 配置
-├── pages/                 # Next.js 页面和 API 路由
-│   ├── api/               # API 路由
+├── lib/                    # Core logic
+│   ├── rpcHandler.js      # RPC handling logic
+│   ├── rpcs.json          # RPC configuration
+│   └── abi.json           # Contract ABI configuration
+├── pages/                 # Next.js pages and API routes
+│   ├── api/               # API routes
 │   │   ├── rpc.js         # RPC API
-│   │   ├── chains.js      # 链列表 API
-│   │   ├── contracts.js   # 合约列表 API
-│   │   ├── contract/      # 合约相关 API
-│   │   └── health.js      # 健康检查 API
-│   └── index.js           # 主页
-├── example.js             # 使用示例
-├── next.config.js         # Next.js 配置
-├── vercel.json            # Vercel 部署配置
-└── package.json           # 项目依赖
+│   │   ├── chains.js      # Chains list API
+│   │   ├── contracts.js   # Contracts list API
+│   │   ├── contract/      # Contract-related APIs
+│   │   └── health.js      # Health check API
+│   └── index.js           # Homepage
+├── example.js             # Usage examples
+├── next.config.js         # Next.js configuration
+├── vercel.json            # Vercel deployment configuration
+└── package.json           # Project dependencies
 ```
 
-### 添加新的区块链网络
+### Adding New Blockchain Networks
 
-1. 在 `lib/rpcs.json` 中添加新的链配置
-2. 确保包含必要的 RPC 节点 URL
-3. 如果需要，更新相关的前端配置
+1. Add new chain configuration in `lib/rpcs.json`
+2. Ensure necessary RPC node URLs are included
+3. Update related frontend configurations if needed
 
-### 添加新的合约支持
+### Adding New Contract Support
 
-1. 在 `lib/abi.json` 中添加新的合约 ABI
-2. 确保合约名称与配置一致
-3. 测试合约函数调用
+1. Add new contract ABI in `lib/abi.json`
+2. Ensure contract names match configuration
+3. Test contract function calls
 
-## 🔍 监控和日志
+## 🔍 Monitoring and Logging
 
-服务提供以下监控功能：
+The service provides the following monitoring features:
 
-- **健康检查**: 定期检查服务状态
-- **错误处理**: 完善的错误捕获和响应
-- **日志记录**: 详细的请求和错误日志
+- **Health Check**: Regular service status checks
+- **Error Handling**: Comprehensive error capture and response
+- **Logging**: Detailed request and error logs
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证。详情请参阅 [LICENSE](LICENSE) 文件。
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 🤝 贡献
+## 🤝 Contributing
 
-欢迎提交 Issue 和 Pull Request！
+Contributions are welcome! Please feel free to submit issues and pull requests.
 
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📞 支持
+## 📞 Support
 
-如果您在使用过程中遇到问题，请：
+If you encounter any issues while using this service, please:
 
-1. 查看文档和示例
-2. 搜索现有的 Issue
-3. 创建新的 Issue 描述问题
+1. Check the documentation and examples
+2. Search for existing issues
+3. Create a new issue describing the problem
 
 ---
 
-**注意**: 本服务仅供学习和测试使用，在生产环境中使用前请确保充分测试和安全性评估。
+**Note**: This service is for learning and testing purposes only. Please ensure thorough testing and security assessment before using it in production environments.
+（注意：本服务仅供学习和测试使用，在生产环境中使用前请确保充分测试和安全性评估。）
