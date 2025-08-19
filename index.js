@@ -179,7 +179,7 @@ async function handleContractCall(chainId, contractAddress, contractName, functi
 
         return result;
     } catch (error) {
-        console.error('合约调用错误:', error.message);
+        console.error('合约调用错误index:', error.message);
         throw error;
     }
 }

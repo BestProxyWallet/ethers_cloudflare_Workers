@@ -73,7 +73,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error('合约调用错误:', error.message);
+        console.error('合约调用错误call:', error.message);
         res.status(500).json({
             success: false,
             error: error.message
