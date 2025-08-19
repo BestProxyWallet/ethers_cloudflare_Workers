@@ -1,4 +1,4 @@
-import { rpcConfig, abiConfig, getSupportedContracts, handleContractCall } from '../../lib/rpcHandler';
+import { rpcConfig, abiConfig, getSupportedContracts, handleContractCall } from '../../../lib/rpcHandler';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {

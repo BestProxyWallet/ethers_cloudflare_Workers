@@ -1,4 +1,4 @@
-import { abiConfig, getContractFunctions } from '../../../lib/rpcHandler';
+import { abiConfig, getContractFunctions } from '../../../../lib/rpcHandler';
 
 export default function handler(req, res) {
     if (req.method !== 'GET') {
