@@ -68,10 +68,10 @@ export default function Home() {
   -H "Content-Type: application/json" \\
   -d '{
     "chainId": 1,
-    "contractAddress": "0x1234567890123456789012345678901234567890",
-    "contractName": "ERC20",
+    "contractAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "contractName": "token",
     "functionName": "balanceOf",
-    "params": ["0x1234567890123456789012345678901234567890"]
+    "params": ["0xF977814e90dA44bFA03b6295A0616a897441aceC"]
   }'`}
                 </pre>
             </div>
