@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Home Page Component
  *
@@ -7,10 +9,60 @@
  * @returns {JSX.Element} The home page component
  */
 export default function Home() {
+    const [contractCall, setContractCall] = React.useState({
+        chainId: 1,
+        contractAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        contractName: "token",
+        functionName: "balanceOf",
+        params: "0xF977814e90dA44bFA03b6295A0616a897441aceC"
+    });
+    const [result, setResult] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState(null);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setContractCall(prev => ({
+            ...prev,
+            [name]: name === 'params' ? value : name === 'chainId' ? Number(value) : value
+        }));
+    };
+
+    const handleContractCall = async () => {
+        setLoading(true);
+        setError(null);
+        setResult(null);
+
+        try {
+            const response = await fetch('/api/contract/call', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...contractCall,
+                    params: contractCall.params ? contractCall.params.split(',').map(p => p.trim()) : []
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setResult(data);
+            } else {
+                setError(data.error);
+            }
+        } catch (err) {
+            setError('网络请求失败: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div style={{
             fontFamily: 'Arial, sans-serif',
-            maxWidth: '800px',
+            maxWidth: '1200px',
             margin: '0 auto',
             padding: '20px',
             lineHeight: '1.6'
@@ -33,6 +85,145 @@ export default function Home() {
                     <li><strong>POST /api/contract/call</strong> - Contract call</li>
                     <li><strong>GET /api/health</strong> - Health check</li>
                 </ul>
+            </div>
+
+            <div style={{ backgroundColor: '#e8f4f8', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
+                <h2 style={{ color: '#333', marginBottom: '15px' }}>实时合约调用</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>Chain ID:</label>
+                        <input
+                            type="number"
+                            name="chainId"
+                            value={contractCall.chainId}
+                            onChange={handleInputChange}
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                fontSize: '14px'
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>合约地址:</label>
+                        <input
+                            type="text"
+                            name="contractAddress"
+                            value={contractCall.contractAddress}
+                            onChange={handleInputChange}
+                            placeholder="0x..."
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                fontSize: '14px'
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>合约名称:</label>
+                        <input
+                            type="text"
+                            name="contractName"
+                            value={contractCall.contractName}
+                            onChange={handleInputChange}
+                            placeholder="token, erc20, etc."
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                fontSize: '14px'
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>函数名:</label>
+                        <input
+                            type="text"
+                            name="functionName"
+                            value={contractCall.functionName}
+                            onChange={handleInputChange}
+                            placeholder="balanceOf, transfer, etc."
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                fontSize: '14px'
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>参数 (用逗号分隔):</label>
+                        <input
+                            type="text"
+                            name="params"
+                            value={contractCall.params}
+                            onChange={handleInputChange}
+                            placeholder="0xaddress, 100, etc."
+                            style={{
+                                width: '100%',
+                                padding: '8px',
+                                border: '1px solid #ddd',
+                                borderRadius: '4px',
+                                fontSize: '14px'
+                            }}
+                        />
+                    </div>
+                </div>
+                <button
+                    onClick={handleContractCall}
+                    disabled={loading}
+                    style={{
+                        backgroundColor: '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        padding: '10px 20px',
+                        borderRadius: '4px',
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                        fontSize: '14px'
+                    }}
+                >
+                    {loading ? '调用中...' : '调用合约'}
+                </button>
+
+                {error && (
+                    <div style={{
+                        backgroundColor: '#f8d7da',
+                        color: '#721c24',
+                        padding: '10px',
+                        borderRadius: '4px',
+                        marginTop: '15px'
+                    }}>
+                        错误: {error}
+                    </div>
+                )}
+
+                {result && (
+                    <div style={{
+                        backgroundColor: '#d4edda',
+                        color: '#155724',
+                        padding: '15px',
+                        borderRadius: '4px',
+                        marginTop: '15px'
+                    }}>
+                        <h4 style={{ marginBottom: '10px' }}>调用结果:</h4>
+                        <pre style={{
+                            backgroundColor: '#f8f9fa',
+                            padding: '10px',
+                            borderRadius: '4px',
+                            overflow: 'auto',
+                            fontSize: '12px',
+                            margin: 0
+                        }}>
+                            {JSON.stringify(result, null, 2)}
+                        </pre>
+                    </div>
+                )}
             </div>
 
             <div style={{ backgroundColor: '#e8f4f8', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
