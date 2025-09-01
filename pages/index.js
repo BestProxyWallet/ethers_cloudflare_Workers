@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * Home Page Component
@@ -19,6 +19,8 @@ export default function Home() {
     const [result, setResult] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
+    const [language, setLanguage] = useState('en');
+    const [translations, setTranslations] = useState({});
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -53,11 +55,30 @@ export default function Home() {
                 setError(data.error);
             }
         } catch (err) {
-            setError('网络请求失败: ' + err.message);
+            setError(translations.networkError || 'Network request failed: ' + err.message);
         } finally {
             setLoading(false);
         }
     };
+
+    const toggleLanguage = () => {
+        const newLanguage = language === 'en' ? 'zh' : 'en';
+        setLanguage(newLanguage);
+    };
+
+    useEffect(() => {
+        const fetchTranslations = async () => {
+            try {
+                const response = await fetch(`/api/translate?lang=${language}`);
+                const data = await response.json();
+                setTranslations(data);
+            } catch (error) {
+                console.error('Failed to fetch translations:', error);
+            }
+        };
+
+        fetchTranslations();
+    }, [language]);
 
     return (
         <div style={{
@@ -67,16 +88,32 @@ export default function Home() {
             padding: '20px',
             lineHeight: '1.6'
         }}>
-            <h1 style={{ color: '#333', marginBottom: '20px' }}>Ethers RPC Proxy</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h1 style={{ color: '#333', marginBottom: '0' }}>{translations.title || 'Ethers RPC Proxy'}</h1>
+                <button
+                    onClick={toggleLanguage}
+                    style={{
+                        backgroundColor: '#28a745',
+                        color: 'white',
+                        border: 'none',
+                        padding: '8px 16px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                    }}
+                >
+                    {language === 'en' ? (translations.switchToChinese || 'Switch to Chinese') : (translations.switchToEnglish || 'Switch to English')}
+                </button>
+            </div>
 
             <p style={{ color: '#666', marginBottom: '30px' }}>
-                A Vercel-deployable ethers.js RPC proxy service that provides unified RPC interface access to multiple blockchain networks.
+                {translations.subtitle || 'A Vercel-deployable ethers.js RPC proxy service that provides unified RPC interface access to multiple blockchain networks.'}
                 <br />
-                <span style={{ color: '#999', fontSize: '14px' }}>（支持在 Vercel 上部署的 ethers.js 调用中转服务，提供统一的 RPC 接口访问多个区块链网络。）</span>
+                <span style={{ color: '#999', fontSize: '14px' }}>{translations.subtitleChinese || '（支持在 Vercel 上部署的 ethers.js 调用中转服务，提供统一的 RPC 接口访问多个区块链网络。）'}</span>
             </p>
 
             <div style={{ backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-                <h2 style={{ color: '#333', marginBottom: '15px' }}>API Endpoints</h2>
+                <h2 style={{ color: '#333', marginBottom: '15px' }}>{translations.apiEndpoints || 'API Endpoints'}</h2>
                 <ul style={{ color: '#666', paddingLeft: '20px' }}>
                     <li><strong>POST /api/rpc</strong> - Generic RPC request</li>
                     <li><strong>GET /api/chains</strong> - Get supported chains list</li>
@@ -88,10 +125,10 @@ export default function Home() {
             </div>
 
             <div style={{ backgroundColor: '#e8f4f8', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-                <h2 style={{ color: '#333', marginBottom: '15px' }}>实时合约调用</h2>
+                <h2 style={{ color: '#333', marginBottom: '15px' }}>{translations.realTimeContractCall || 'Real-time Contract Call'}</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>Chain ID:</label>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>{translations.chainId || 'Chain ID:'}</label>
                         <input
                             type="number"
                             name="chainId"
@@ -107,7 +144,7 @@ export default function Home() {
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>合约地址:</label>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>{translations.contractAddress || 'Contract Address:'}</label>
                         <input
                             type="text"
                             name="contractAddress"
@@ -124,7 +161,7 @@ export default function Home() {
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>合约名称:</label>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>{translations.contractName || 'Contract Name:'}</label>
                         <input
                             type="text"
                             name="contractName"
@@ -141,7 +178,7 @@ export default function Home() {
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>函数名:</label>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>{translations.functionName || 'Function Name:'}</label>
                         <input
                             type="text"
                             name="functionName"
@@ -158,7 +195,7 @@ export default function Home() {
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>参数 (用逗号分隔):</label>
+                        <label style={{ display: 'block', marginBottom: '5px', color: '#555' }}>{translations.parameters || 'Parameters (comma separated):'}</label>
                         <input
                             type="text"
                             name="params"
@@ -188,7 +225,7 @@ export default function Home() {
                         fontSize: '14px'
                     }}
                 >
-                    {loading ? '调用中...' : '调用合约'}
+                    {loading ? (translations.calling || 'Calling...') : (translations.callContract || 'Call Contract')}
                 </button>
 
                 {error && (
@@ -199,7 +236,7 @@ export default function Home() {
                         borderRadius: '4px',
                         marginTop: '15px'
                     }}>
-                        错误: {error}
+                        {translations.error || 'Error:'} {error}
                     </div>
                 )}
 
@@ -211,7 +248,7 @@ export default function Home() {
                         borderRadius: '4px',
                         marginTop: '15px'
                     }}>
-                        <h4 style={{ marginBottom: '10px' }}>调用结果:</h4>
+                        <h4 style={{ marginBottom: '10px' }}>{translations.callResult || 'Call Result:'}</h4>
                         <pre style={{
                             backgroundColor: '#f8f9fa',
                             padding: '10px',
@@ -227,8 +264,8 @@ export default function Home() {
             </div>
 
             <div style={{ backgroundColor: '#e8f4f8', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-                <h2 style={{ color: '#333', marginBottom: '15px' }}>Usage Examples</h2>
-                <h3 style={{ color: '#555', marginBottom: '10px' }}>RPC Request Example</h3>
+                <h2 style={{ color: '#333', marginBottom: '15px' }}>{translations.usageExamples || 'Usage Examples'}</h2>
+                <h3 style={{ color: '#555', marginBottom: '10px' }}>{translations.rpcRequestExample || 'RPC Request Example'}</h3>
                 <pre style={{
                     backgroundColor: '#fff',
                     padding: '15px',
@@ -247,7 +284,7 @@ export default function Home() {
   }'`}
                 </pre>
 
-                <h3 style={{ color: '#555', marginBottom: '10px', marginTop: '20px' }}>Contract Call Example</h3>
+                <h3 style={{ color: '#555', marginBottom: '10px', marginTop: '20px' }}>{translations.contractCallExample || 'Contract Call Example'}</h3>
                 <pre style={{
                     backgroundColor: '#fff',
                     padding: '15px',
@@ -268,17 +305,17 @@ export default function Home() {
             </div>
 
             <div style={{ backgroundColor: '#fff3cd', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-                <h2 style={{ color: '#333', marginBottom: '15px' }}>Health Check</h2>
+                <h2 style={{ color: '#333', marginBottom: '15px' }}>{translations.healthCheck || 'Health Check'}</h2>
                 <p style={{ color: '#666' }}>
-                    Visit <a href="/api/health" style={{ color: '#007bff' }}>/api/health</a> to check service status
+                    {translations.healthCheckDescription || 'Visit /api/health to check service status'}
                     <br />
-                    <span style={{ color: '#999', fontSize: '14px' }}>（访问 /api/health 查看服务状态）</span>
+                    <span style={{ color: '#999', fontSize: '14px' }}>{translations.healthCheckChinese || '（访问 /api/health 查看服务状态）'}</span>
                 </p>
             </div>
 
             <div style={{ textAlign: 'center', color: '#666', fontSize: '14px' }}>
-                <p>Ethers RPC Proxy service deployed on Vercel</p>
-                <p style={{ color: '#999', fontSize: '12px', marginTop: '5px' }}>（部署在 Vercel 上的 Ethers RPC Proxy 服务）</p>
+                <p>{translations.footer || 'Ethers RPC Proxy service deployed on Vercel'}</p>
+                <p style={{ color: '#999', fontSize: '12px', marginTop: '5px' }}>{translations.footerChinese || '（部署在 Vercel 上的 Ethers RPC Proxy 服务）'}</p>
             </div>
         </div>
     );
